@@ -20,9 +20,6 @@ renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.setClearColor(0x101010);
 document.body.appendChild(renderer.domElement);
 
-//Controles da câmera
-var controles = new THREE.OrbitControls(camera, renderer.domElement);
-
 //Luz da câmera
 var luz = new THREE.DirectionalLight(0xffffff, 1);
 luz.position.setScalar(10);
