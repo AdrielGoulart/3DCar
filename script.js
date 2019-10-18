@@ -51,7 +51,16 @@ var curva = new THREE.SplineCurve([
   new THREE.Vector3(6.5, 1.5, 0.2),
   new THREE.Vector3(8.7, 0, 0.2),
   new THREE.Vector3(9, -3, 0.2),
-  new THREE.Vector3(7, -4.5, 0.2)
+  new THREE.Vector3(6.6, -4.5, 0.2),
+  new THREE.Vector3(6, -7.9, 0.2),
+  new THREE.Vector3(3.3, -8, 1),
+  new THREE.Vector3(2.5, -5, 0.2),
+  new THREE.Vector3(2.5, -2, 0.2),
+  new THREE.Vector3(-1.2, -2, 0.2),
+  new THREE.Vector3(-1.8, -6, 0.2),
+  new THREE.Vector3(-4, -6, 0.2),
+  new THREE.Vector3(-4.6, -3.8, 0.2),
+  new THREE.Vector3(-6.7, -2.9, 0.2),
 ]);
 
 var caminho = new THREE.Path(curva.getPoints(50));
@@ -91,6 +100,15 @@ var p8 = new TWEEN.Tween(cubo.position).to(curva.points[7], 1000);
 var p9 = new TWEEN.Tween(cubo.position).to(curva.points[8], 1000);
 var p10 = new TWEEN.Tween(cubo.position).to(curva.points[9], 1000);
 var p11 = new TWEEN.Tween(cubo.position).to(curva.points[10], 1000);
+var p12 = new TWEEN.Tween(cubo.position).to(curva.points[11], 1000);
+var p13 = new TWEEN.Tween(cubo.position).to(curva.points[12], 1000);
+var p14 = new TWEEN.Tween(cubo.position).to(curva.points[13], 1000);
+var p15 = new TWEEN.Tween(cubo.position).to(curva.points[14], 1000);
+var p16 = new TWEEN.Tween(cubo.position).to(curva.points[15], 1000);
+var p17 = new TWEEN.Tween(cubo.position).to(curva.points[16], 1000);
+var p18 = new TWEEN.Tween(cubo.position).to(curva.points[17], 1000);
+var p19 = new TWEEN.Tween(cubo.position).to(curva.points[18], 1000);
+var p20 = new TWEEN.Tween(cubo.position).to(curva.points[19], 1000)
 
 //Ordem dos pontos que o carro irá passar
 p1.chain(p2);
@@ -103,9 +121,21 @@ p7.chain(p8);
 p8.chain(p9);
 p9.chain(p10);
 p10.chain(p11);
+p11.chain(p12);
+p12.chain(p13);
+p13.chain(p14);
+p14.chain(p15);
+p15.chain(p16);
+p16.chain(p17);
+p17.chain(p18);
+p18.chain(p19);
+p19.chain(p20);
+p20.chain(p1);
+
 
 //Ponto de inicio
 p1.start();
+
 
 function desenhar() {
   animacao();
