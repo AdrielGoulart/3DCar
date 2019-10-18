@@ -18,6 +18,7 @@ var renderer = new THREE.WebGLRenderer({
 });
 renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.setClearColor(0x101010);
+var canvas = renderer.domElement;
 document.body.appendChild(renderer.domElement);
 
 //Luz da câmera
@@ -151,3 +152,20 @@ function animacao(tempo) {
   TWEEN.update(tempo);
   renderer.render(cena, camera);
 }
+
+//Variáveis para avaliar o deslocamento do mouse
+var xi;
+var yi;
+
+canvas.addEventListener("mousedown", function(e){
+    xi = e.offsetX;
+    yi = e.offsetY;
+},false);
+
+//Evento de movimento do mouse (se há botão pressionado)
+canvas.addEventListener("mousemove", function(e){
+    if(e.buttons > 0){
+        camera.position.x = 8*(xi  -e.offsetX) / canvas.width;
+        camera.position.y = 8*(e.offsetY - yi) / canvas.height;
+    }
+},false);
