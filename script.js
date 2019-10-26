@@ -68,6 +68,7 @@ var curva = new THREE.SplineCurve([
   new THREE.Vector3(-4, -6, 0.2),
   new THREE.Vector3(-4.6, -3.8, 0.2),
   new THREE.Vector3(-6.7, -2.9, 0.2),
+  new THREE.Vector3(-7.2, 3, 0.2),
 ]);
 
 var caminho = new THREE.Path(curva.getPoints(50));
@@ -95,19 +96,19 @@ var cubo = new THREE.Mesh(geometria, material);
 cubo.position.set(-7.2, 3, 0.2);
 cena.add(cubo);
 
- // Angulo e ponto de inicio
- anguloAnterior = pegarAngulo( posicao );
- pontoAnterior = caminho.getPointAt( posicao );
+// Angulo e ponto de inicio (esse dois não estão sendo utilizados em nada)
+//anguloAnterior = pegarAngulo( posicao );
+//pontoAnterior = caminho.getPointAt( posicao );
 
- function pegarAngulo( posicao ){
+function pegarAngulo(posicao) {
   // Pegando a tangent 2D da curva
-    var tangent = caminho.getTangent(posicao).normalize();
-  
-    // Mudando a tangent para 3D
-    angulo = - Math.atan( tangent.x / tangent.y);
-    
-    return angulo;
-  }
+  var tangent = caminho.getTangent(posicao).normalize();
+
+  // Mudando a tangent para 3D
+  angulo = - Math.atan(tangent.x / tangent.y);
+
+  return angulo;
+}
 
 function desenhar() {
   movimento();
@@ -115,27 +116,35 @@ function desenhar() {
   renderer.render(cena, camera);
 }
 
-desenhar();
-
 function movimento() {
-  
+
   // Adicionando a posição para o movimento
   posicao += 0.001;
-
+  console.log("Posiçao", posicao)
   // Obtendo o ponto da posição
+  if(posicao > 1.0){
+    posicao = 0.001;
+  }
   var ponto = caminho.getPointAt(posicao);
   cubo.position.x = ponto.x;
   cubo.position.y = ponto.y;
 
   var angulo = pegarAngulo(posicao);
   // Define o quaternion
-  cubo.quaternion.setFromAxisAngle( new THREE.Vector3(0, 0, 1), angulo );
-    
-  pontoAnterior = ponto;
-  anguloAnterior = angulo;
-    
+  cubo.quaternion.setFromAxisAngle(new THREE.Vector3(0, 0, 1), angulo);
+
+  /**
+   * Esses dois não estão interferindo em nada no código
+   */
+  //pontoAnterior = ponto;
+  //anguloAnterior = angulo;
+
+  repeticao();
 }
 
+function repeticao() {
+
+}
 
 //Variáveis para avaliar o deslocamento do mouse
 var xi;
@@ -154,3 +163,4 @@ canvas.addEventListener("mousemove", function (e) {
   }
 }, false);
 
+requestAnimationFrame(desenhar);
