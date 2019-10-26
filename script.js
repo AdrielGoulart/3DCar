@@ -1,4 +1,10 @@
 "use strict";
+var angulo = 0;
+var posicao = 0;
+
+var anguloAnterior;
+var pontoAnterior;
+
 //Linha da pista
 var materialLinha = new THREE.LineBasicMaterial({ color: 0xFFFFFF });
 var geometriaLinha = new THREE.Geometry();
@@ -89,19 +95,47 @@ var cubo = new THREE.Mesh(geometria, material);
 cubo.position.set(-7.2, 3, 0.2);
 cena.add(cubo);
 
+ // Angulo e ponto de inicio
+ anguloAnterior = pegarAngulo( posicao );
+ pontoAnterior = caminho.getPointAt( posicao );
+
+ function pegarAngulo( posicao ){
+  // Pegando a tangent 2D da curva
+    var tangent = caminho.getTangent(posicao).normalize();
+  
+    // Mudando a tangent para 3D
+    angulo = - Math.atan( tangent.x / tangent.y);
+    
+    return angulo;
+  }
+
 function desenhar() {
-  animacao();
+  movimento();
   requestAnimationFrame(desenhar);
   renderer.render(cena, camera);
 }
 
 desenhar();
 
-//Método responsável por fazer o movimento do carro de um vértice a outro
-function animacao(tempo) {
-  requestAnimationFrame(animacao);
-  renderer.render(cena, camera);
+function movimento() {
+  
+  // Adicionando a posição para o movimento
+  posicao += 0.001;
+
+  // Obtendo o ponto da posição
+  var ponto = caminho.getPointAt(posicao);
+  cubo.position.x = ponto.x;
+  cubo.position.y = ponto.y;
+
+  var angulo = pegarAngulo(posicao);
+  // Define o quaternion
+  cubo.quaternion.setFromAxisAngle( new THREE.Vector3(0, 0, 1), angulo );
+    
+  pontoAnterior = ponto;
+  anguloAnterior = angulo;
+    
 }
+
 
 //Variáveis para avaliar o deslocamento do mouse
 var xi;
