@@ -89,13 +89,48 @@ for (let p of curva.points) {
 var linha = new THREE.Line(geometriaLinha, materialLinha);
 cena.add(linha);
 
-//Cubo
-var geometria = new THREE.BoxGeometry(1, 1.8, 1);
+//Corpo do carro
+var geometria = new THREE.BoxGeometry(1, 1.5, 1);
 var material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
 var cubo = new THREE.Mesh(geometria, material);
-cubo.position.set(-7.2, 3, 0.2);
-cena.add(cubo);
+/*
+//Roda do carro
+var circulo = new THREE.CircleGeometry(0.2, 32);
+var imagemRoda = new THREE.MeshBasicMaterial({
+  map: new THREE.TextureLoader().load('roda.png'),
+  side: THREE.DoubleSide
+});
 
+//Roda 1
+var roda1 = new THREE.Mesh(circulo, imagemRoda);
+roda1.rotation.x = 1.6;
+roda1.rotation.y = 1.6;
+roda1.position.x = 0.6;
+roda1.position.y = -0.4;
+
+var roda2 = roda1.clone();
+roda2.rotation.x = 1.6;
+roda2.rotation.y = 1.6;
+roda2.position.x = -0.6;
+roda2.position.y = -0.4;
+*/
+
+var cilindro = new THREE.CylinderGeometry( 5, 5, 0.2, 32 );
+var imagemRoda = new THREE.MeshBasicMaterial({
+  map: new THREE.TextureLoader().load('roda.png'),
+  side: THREE.DoubleSide
+});
+var roda1 = new THREE.Mesh( cilindro, imagemRoda );
+
+
+
+
+
+var carro = new THREE.Group();
+carro.add(cubo);
+carro.add(roda1);
+carro.position.set(-7.2, 3, 0.2);
+cena.add(carro);
 // Angulo e ponto de inicio (esse dois não estão sendo utilizados em nada)
 //anguloAnterior = pegarAngulo( posicao );
 //pontoAnterior = caminho.getPointAt( posicao );
@@ -126,12 +161,12 @@ function movimento() {
     posicao = 0.001;
   }
   var ponto = caminho.getPointAt(posicao);
-  cubo.position.x = ponto.x;
-  cubo.position.y = ponto.y;
+  carro.position.x = ponto.x;
+  carro.position.y = ponto.y;
 
   var angulo = pegarAngulo(posicao);
   // Define o quaternion
-  cubo.quaternion.setFromAxisAngle(new THREE.Vector3(0, 0, 1), angulo);
+  carro.quaternion.setFromAxisAngle(new THREE.Vector3(0, 0, 1), angulo);
 
   /**
    * Esses dois não estão interferindo em nada no código
