@@ -1,5 +1,7 @@
 "use strict";
 var angulo = 0;
+var anguloCamera =0;
+var radianos = 5;
 var posicao = 0;
 
 var anguloAnterior;
@@ -60,7 +62,7 @@ var curva = new THREE.SplineCurve([
   new THREE.Vector3(9, -3, 0.2),
   new THREE.Vector3(6.6, -4.5, 0.2),
   new THREE.Vector3(6, -7.9, 0.2),
-  new THREE.Vector3(3.3, -8, 1),
+  new THREE.Vector3(3.3, -8, 0.2),
   new THREE.Vector3(2.5, -5, 0.2),
   new THREE.Vector3(2.5, -2, 0.2),
   new THREE.Vector3(-1.2, -2, 0.2),
@@ -71,8 +73,8 @@ var curva = new THREE.SplineCurve([
   new THREE.Vector3(-7.2, 3, 0.2),
 ]);
 
-var caminho = new THREE.Path(curva.getPoints(50));
-var geometriaLinha = caminho.createPointsGeometry(50);
+var caminho = new THREE.Path(curva.getPoints(250));
+var geometriaLinha = caminho.createPointsGeometry(250);
 
 //Desenhar os pontos de referencia 
 var materialPonto = new THREE.PointsMaterial({ size: 10, sizeAttenuation: false });
@@ -171,10 +173,10 @@ function movimento() {
   // Adicionando a posição para o movimento
   posicao += 0.001;
 
-  if(posicao > 1.0){
+  if (posicao > 1.0) {
     posicao = 0.001;
   }
-    // Obtendo o ponto da posição
+  // Obtendo o ponto da posição
   var ponto = caminho.getPointAt(posicao);
   carro.position.x = ponto.x;
   carro.position.y = ponto.y;
@@ -188,12 +190,6 @@ function movimento() {
    */
   //pontoAnterior = ponto;
   //anguloAnterior = angulo;
-
-  repeticao();
-}
-
-function repeticao() {
-
 }
 
 //Variáveis para avaliar o deslocamento do mouse
@@ -208,8 +204,13 @@ canvas.addEventListener("mousedown", function (e) {
 //Evento de movimento do mouse (se há botão pressionado)
 canvas.addEventListener("mousemove", function (e) {
   if (e.buttons > 0) {
-    camera.position.x = 8 * (xi - e.offsetX) / canvas.width;
-    camera.position.y = 8 * (e.offsetY - yi) / canvas.height;
+    camera.position.x = 40 * (xi - e.offsetX) / canvas.width;
+    camera.position.y = 40 * (e.offsetY - yi) / canvas.height;
+    camera.lookAt( cena.position );
+    //camera.rotation.x += 2 * Math.PI / 180;
+    //camera.rotation.y += 2 * Math.PI / 180;
+    //camera.position.x = radianos * Math.cos( anguloCamera );  
+    //anguloCamera += 0.01;
   }
 }, false);
 
