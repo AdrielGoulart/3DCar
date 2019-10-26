@@ -89,55 +89,6 @@ var cubo = new THREE.Mesh(geometria, material);
 cubo.position.set(-7.2, 3, 0.2);
 cena.add(cubo);
 
-//Pontos por onde o carro irá passar
-var p1 = new TWEEN.Tween(cubo.position).to(curva.points[0], 1000);
-var p2 = new TWEEN.Tween(cubo.position).to(curva.points[1], 1000);
-var p3 = new TWEEN.Tween(cubo.position).to(curva.points[2], 1000);
-var p4 = new TWEEN.Tween(cubo.position).to(curva.points[3], 1000);
-var p5 = new TWEEN.Tween(cubo.position).to(curva.points[4], 1000);
-var p6 = new TWEEN.Tween(cubo.position).to(curva.points[5], 1000);
-var p7 = new TWEEN.Tween(cubo.position).to(curva.points[6], 1000);
-var p8 = new TWEEN.Tween(cubo.position).to(curva.points[7], 1000);
-var p9 = new TWEEN.Tween(cubo.position).to(curva.points[8], 1000);
-var p10 = new TWEEN.Tween(cubo.position).to(curva.points[9], 1000);
-var p11 = new TWEEN.Tween(cubo.position).to(curva.points[10], 1000);
-var p12 = new TWEEN.Tween(cubo.position).to(curva.points[11], 1000);
-var p13 = new TWEEN.Tween(cubo.position).to(curva.points[12], 1000);
-var p14 = new TWEEN.Tween(cubo.position).to(curva.points[13], 1000);
-var p15 = new TWEEN.Tween(cubo.position).to(curva.points[14], 1000);
-var p16 = new TWEEN.Tween(cubo.position).to(curva.points[15], 1000);
-var p17 = new TWEEN.Tween(cubo.position).to(curva.points[16], 1000);
-var p18 = new TWEEN.Tween(cubo.position).to(curva.points[17], 1000);
-var p19 = new TWEEN.Tween(cubo.position).to(curva.points[18], 1000);
-var p20 = new TWEEN.Tween(cubo.position).to(curva.points[19], 1000)
-
-//Ordem dos pontos que o carro irá passar
-p1.chain(p2);
-p2.chain(p3);
-p3.chain(p4);
-p4.chain(p5);
-p5.chain(p6);
-p6.chain(p7);
-p7.chain(p8);
-p8.chain(p9);
-p9.chain(p10);
-p10.chain(p11);
-p11.chain(p12);
-p12.chain(p13);
-p13.chain(p14);
-p14.chain(p15);
-p15.chain(p16);
-p16.chain(p17);
-p17.chain(p18);
-p18.chain(p19);
-p19.chain(p20);
-p20.chain(p1);
-
-
-//Ponto de inicio
-p1.start();
-
-
 function desenhar() {
   animacao();
   requestAnimationFrame(desenhar);
@@ -149,7 +100,6 @@ desenhar();
 //Método responsável por fazer o movimento do carro de um vértice a outro
 function animacao(tempo) {
   requestAnimationFrame(animacao);
-  TWEEN.update(tempo);
   renderer.render(cena, camera);
 }
 
@@ -157,15 +107,16 @@ function animacao(tempo) {
 var xi;
 var yi;
 
-canvas.addEventListener("mousedown", function(e){
-    xi = e.offsetX;
-    yi = e.offsetY;
-},false);
+canvas.addEventListener("mousedown", function (e) {
+  xi = e.offsetX;
+  yi = e.offsetY;
+}, false);
 
 //Evento de movimento do mouse (se há botão pressionado)
-canvas.addEventListener("mousemove", function(e){
-    if(e.buttons > 0){
-        camera.position.x = 8*(xi  -e.offsetX) / canvas.width;
-        camera.position.y = 8*(e.offsetY - yi) / canvas.height;
-    }
-},false);
+canvas.addEventListener("mousemove", function (e) {
+  if (e.buttons > 0) {
+    camera.position.x = 8 * (xi - e.offsetX) / canvas.width;
+    camera.position.y = 8 * (e.offsetY - yi) / canvas.height;
+  }
+}, false);
+
