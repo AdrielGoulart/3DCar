@@ -93,7 +93,7 @@ cena.add(linha);
 var geometria = new THREE.BoxGeometry(1, 1.5, 1);
 var material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
 var cubo = new THREE.Mesh(geometria, material);
-/*
+
 //Roda do carro
 var circulo = new THREE.CircleGeometry(0.2, 32);
 var imagemRoda = new THREE.MeshBasicMaterial({
@@ -108,32 +108,47 @@ roda1.rotation.y = 1.6;
 roda1.position.x = 0.6;
 roda1.position.y = -0.4;
 
+//Roda 2
 var roda2 = roda1.clone();
 roda2.rotation.x = 1.6;
 roda2.rotation.y = 1.6;
 roda2.position.x = -0.6;
 roda2.position.y = -0.4;
-*/
 
-var cilindro = new THREE.CylinderGeometry( 5, 5, 0.2, 32 );
+//Roda 3
+var roda3 = roda1.clone();
+roda3.rotation.x = 1.6;
+roda3.rotation.y = 1.6;
+roda3.position.x = 0.6;
+roda3.position.y = 0.5;
+
+//Roda 4
+var roda4 = roda1.clone();
+roda4.rotation.x = 1.6;
+roda4.rotation.y = 1.6;
+roda4.position.x = -0.6;
+roda4.position.y = 0.5;
+
+
+/* Roda usando cilindro
+var cilindro = new THREE.CylinderGeometry( 5, 5, 0.3, 32 );
 var imagemRoda = new THREE.MeshBasicMaterial({
   map: new THREE.TextureLoader().load('roda.png'),
   side: THREE.DoubleSide
 });
 var roda1 = new THREE.Mesh( cilindro, imagemRoda );
 
-
-
-
+roda1.position.x = -0.6;
+roda1.position.y = -0.4;*/
 
 var carro = new THREE.Group();
 carro.add(cubo);
 carro.add(roda1);
+carro.add(roda2);
+carro.add(roda3);
+carro.add(roda4);
 carro.position.set(-7.2, 3, 0.2);
 cena.add(carro);
-// Angulo e ponto de inicio (esse dois não estão sendo utilizados em nada)
-//anguloAnterior = pegarAngulo( posicao );
-//pontoAnterior = caminho.getPointAt( posicao );
 
 function pegarAngulo(posicao) {
   // Pegando a tangent 2D da curva
@@ -155,11 +170,11 @@ function movimento() {
 
   // Adicionando a posição para o movimento
   posicao += 0.001;
-  console.log("Posiçao", posicao)
-  // Obtendo o ponto da posição
+
   if(posicao > 1.0){
     posicao = 0.001;
   }
+    // Obtendo o ponto da posição
   var ponto = caminho.getPointAt(posicao);
   carro.position.x = ponto.x;
   carro.position.y = ponto.y;
