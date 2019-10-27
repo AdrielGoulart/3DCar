@@ -1,7 +1,9 @@
 "use strict";
 var angulo = 0;
-var anguloCamera =0;
-var radianos = 5;
+var mouseX = 0, mouseY = 0;
+var winX = window.innerWidth / 2;
+var winY = window.innerHeight / 2;
+var limiteZ = 0;
 var posicao = 0;
 
 var anguloAnterior;
@@ -162,14 +164,7 @@ function pegarAngulo(posicao) {
   return angulo;
 }
 
-function desenhar() {
-  movimento();
-  requestAnimationFrame(desenhar);
-  renderer.render(cena, camera);
-}
-
 function movimento() {
-
   // Adicionando a posição para o movimento
   posicao += 0.001;
 
@@ -193,9 +188,9 @@ function movimento() {
 }
 
 //Variáveis para avaliar o deslocamento do mouse
+/*
 var xi;
 var yi;
-
 canvas.addEventListener("mousedown", function (e) {
   xi = e.offsetX;
   yi = e.offsetY;
@@ -207,11 +202,43 @@ canvas.addEventListener("mousemove", function (e) {
     camera.position.x = 40 * (xi - e.offsetX) / canvas.width;
     camera.position.y = 40 * (e.offsetY - yi) / canvas.height;
     camera.lookAt( cena.position );
+    //https://threejs.org/examples/#misc_lookat
+    //https://github.com/mrdoob/three.js/blob/master/examples/misc_lookat.html
     //camera.rotation.x += 2 * Math.PI / 180;
     //camera.rotation.y += 2 * Math.PI / 180;
+
     //camera.position.x = radianos * Math.cos( anguloCamera );  
+    //camera.position.x = radianos * Math.cos( anguloCamera );  
+    //camera.position.z = radianos * Math.sin( anguloCamera );
     //anguloCamera += 0.01;
   }
+}, false);*/
+
+window.addEventListener('resize', onWindowResize, false);
+
+function onWindowResize() {
+  winX = window.innerWidth / 2;
+  winY = window.innerHeight / 2;
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth, window.innerHeight);
+}
+
+canvas.addEventListener("mousemove", function (e) {
+  if (e.buttons > 0) {
+    mouseX = (event.clientX - winX);
+    mouseY = (event.clientY - winY);
+    camera.position.x += (mouseX - camera.position.x) * 0.001;
+    camera.position.y += (mouseY - camera.position.y) * 0.001;
+    camera.lookAt(cena.position);
+    //camera.position.z -=0.01;
+  }
 }, false);
+
+function desenhar() {
+  movimento();
+  requestAnimationFrame(desenhar);
+  renderer.render(cena, camera);
+}
 
 requestAnimationFrame(desenhar);
