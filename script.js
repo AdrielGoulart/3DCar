@@ -94,9 +94,10 @@ var linha = new THREE.Line(geometriaLinha, materialLinha);
 cena.add(linha);
 
 //Corpo do carro
-var geometria = new THREE.BoxGeometry(1, 1.5, 1);
-var material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
+var geometria = new THREE.BoxGeometry(1, 1.5, 0.3);
+var material = new THREE.MeshBasicMaterial({ color: 0xff0000 });
 var cubo = new THREE.Mesh(geometria, material);
+cubo.position.z = 0;
 
 //Roda do carro
 var circulo = new THREE.CircleGeometry(0.2, 32);
@@ -105,12 +106,51 @@ var imagemRoda = new THREE.MeshBasicMaterial({
   side: THREE.DoubleSide
 });
 
+var geometry = new THREE.PlaneGeometry( 1,0.4, 32 );
+var material = new THREE.MeshBasicMaterial( {color: 0x6bbd1, side: THREE.DoubleSide} );
+var vidro1 = new THREE.Mesh( geometry, material );
+vidro1.rotation.x = 1.6;
+vidro1.position.y = 0.3
+vidro1.position.z = 0.2;
+
+var vidro2 = vidro1.clone();
+vidro2.rotation.x = 1.6;
+vidro2.position.y = -0.3
+vidro2.position.z = 0.2;
+
+
+var geometry = new THREE.PlaneGeometry( 0.2,0.5, 32 );
+var material = new THREE.MeshBasicMaterial( {color: 0x6bbd1, side: THREE.DoubleSide} );
+var vidro3 = new THREE.Mesh( geometry, material );
+vidro3.rotation.y = 1.6;
+vidro3.position.x = 0.51;
+vidro3.position.z = 0.26;
+
+var vidro4 = vidro3.clone();
+vidro4.rotation.y = 1.6;
+vidro4.position.x = -0.51;
+vidro4.position.z = 0.26;
+
+var geometry = new THREE.PlaneGeometry( 1,0.6, 32 );
+var material = new THREE.MeshBasicMaterial( {color: 0xff0000, side: THREE.DoubleSide} );
+var teto = new THREE.Mesh( geometry, material );
+teto.position.z = 0.4;
+
+//Corpo do carro
+var geometria = new THREE.BoxGeometry(1, 0.5, 0.2);
+var material = new THREE.MeshBasicMaterial({ color: 0xff0000 });
+var interior = new THREE.Mesh(geometria, material);
+interior.position.z = 0.3;
+
+
+
 //Roda 1
 var roda1 = new THREE.Mesh(circulo, imagemRoda);
 roda1.rotation.x = 1.6;
 roda1.rotation.y = 1.6;
 roda1.position.x = 0.6;
 roda1.position.y = -0.4;
+roda1.position.z = -0.2;
 
 //Roda 2
 var roda2 = roda1.clone();
@@ -118,32 +158,49 @@ roda2.rotation.x = 1.6;
 roda2.rotation.y = 1.6;
 roda2.position.x = -0.6;
 roda2.position.y = -0.4;
+roda2.position.z = -0.2;
+
 
 //Roda 3
 var roda3 = roda1.clone();
 roda3.rotation.x = 1.6;
 roda3.rotation.y = 1.6;
 roda3.position.x = 0.6;
-roda3.position.y = 0.5;
+roda3.position.y = 0.4;
+roda3.position.z = -0.2;
+
 
 //Roda 4
 var roda4 = roda1.clone();
 roda4.rotation.x = 1.6;
 roda4.rotation.y = 1.6;
 roda4.position.x = -0.6;
-roda4.position.y = 0.5;
+roda4.position.y = 0.4;
+roda4.position.z = -0.2;
 
 
-/* Roda usando cilindro
-var cilindro = new THREE.CylinderGeometry( 5, 5, 0.3, 32 );
-var imagemRoda = new THREE.MeshBasicMaterial({
-  map: new THREE.TextureLoader().load('roda.png'),
-  side: THREE.DoubleSide
-});
-var roda1 = new THREE.Mesh( cilindro, imagemRoda );
+var geometry = new THREE.BoxGeometry( 0.15, 0.15, 0.15 );
+var material = new THREE.MeshBasicMaterial( {color: 0xf8cf0d} );
+var farol1 = new THREE.Mesh( geometry, material );
+farol1.position.x = 0.4;
+farol1.position.y = -0.7;
+farol1.position.z = 0.1;
 
-roda1.position.x = -0.6;
-roda1.position.y = -0.4;*/
+var farol2 = farol1.clone();
+farol2.position.x = -0.4;
+farol2.position.y = -0.7;
+farol2.position.z = 0.1;
+
+var farol3 = farol1.clone();
+farol3.position.x = -0.4;
+farol3.position.y = 0.7;
+farol3.position.z = 0.1;
+
+var farol4 = farol1.clone();
+farol4.position.x = 0.4;
+farol4.position.y = 0.7;
+farol4.position.z = 0.1;
+
 
 var carro = new THREE.Group();
 carro.add(cubo);
@@ -151,6 +208,16 @@ carro.add(roda1);
 carro.add(roda2);
 carro.add(roda3);
 carro.add(roda4);
+carro.add(vidro1);
+carro.add(vidro2);
+carro.add(vidro3);
+carro.add(vidro4);
+carro.add(teto);
+carro.add(interior);
+carro.add(farol1);
+carro.add(farol2);
+carro.add(farol3);
+carro.add(farol4);
 carro.position.set(-7.2, 3, 0.2);
 cena.add(carro);
 
@@ -224,7 +291,6 @@ canvas.addEventListener("mousemove", function (e) {
         camera.position.y = 20 * Math.sin((e.offsetY - yi)*Math.PI / 180);
         camera.position.z = 20 * Math.cos((e.offsetY - yi)*Math.PI / 180);
         camera.lookAt(cena.position);
-        console.log("xi: ",xi, " yi: ",yi);
     }
 
 }, false);
