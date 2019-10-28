@@ -202,16 +202,16 @@ interior.position.z = 0.3;
 
 //Roda 1
 var roda1 = new THREE.Mesh(circulo, imagemRoda);
-roda1.rotation.x = 1.6;
-roda1.rotation.y = 1.6;
+roda1.rotation.x = 1.57;
+roda1.rotation.y = 1.57;
 roda1.position.x = 0.6;
 roda1.position.y = -0.4;
 roda1.position.z = -0.2;
 
 //Roda 2
 var roda2 = roda1.clone();
-roda2.rotation.x = 1.6;
-roda2.rotation.y = 1.6;
+roda2.rotation.x = 1.57;
+roda2.rotation.y = 1.57;
 roda2.position.x = -0.6;
 roda2.position.y = -0.4;
 roda2.position.z = -0.2;
@@ -219,8 +219,8 @@ roda2.position.z = -0.2;
 
 //Roda 3
 var roda3 = roda1.clone();
-roda3.rotation.x = 1.6;
-roda3.rotation.y = 1.6;
+roda3.rotation.x = 1.57;
+roda3.rotation.y = 1.57;
 roda3.position.x = 0.6;
 roda3.position.y = 0.4;
 roda3.position.z = -0.2;
@@ -228,8 +228,8 @@ roda3.position.z = -0.2;
 
 //Roda 4
 var roda4 = roda1.clone();
-roda4.rotation.x = 1.6;
-roda4.rotation.y = 1.6;
+roda4.rotation.x = 1.57;
+roda4.rotation.y = 1.57;
 roda4.position.x = -0.6;
 roda4.position.y = 0.4;
 roda4.position.z = -0.2;
@@ -289,7 +289,7 @@ function pegarAngulo(posicao) {
 
 function movimento() {
 
-  var vel = 0.3;
+  var vel = 0.16;
 
   roda1.rotation.x -= vel;
   roda2.rotation.x -= vel;
@@ -361,6 +361,7 @@ canvas.addEventListener("mousemove", function (e) {
 
 function desenhar() {
   movimento();
+  
   requestAnimationFrame(desenhar);
   renderer.render(cena, camera);
 }
