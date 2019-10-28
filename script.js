@@ -17,10 +17,10 @@ var geometriaLinha = new THREE.Geometry();
 var cena = new THREE.Scene();
 
 //Câmera
-var camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 1, 1000);
+var camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.01, 1000);
 
 //Posição da câmera
-camera.position.set(1, 0.09, 18);
+camera.position.set(0, 0.09, 18);
 
 //Renderizador
 var renderer = new THREE.WebGLRenderer({
@@ -44,7 +44,7 @@ var pistaMaterial = new THREE.MeshLambertMaterial({
 //Unindo o material da pista com o plano
 var material = new THREE.Mesh(planoPista, pistaMaterial);
 material.receiveShadow = true;
-material.position.set(1, 0, 0);
+material.position.set(1, 0, -0.2);
 
 // Adicionando o a pista a cena
 cena.add(material);
@@ -179,41 +179,9 @@ function movimento() {
   var angulo = pegarAngulo(posicao);
   // Define o quaternion
   carro.quaternion.setFromAxisAngle(new THREE.Vector3(0, 0, 1), angulo);
-
-  /**
-   * Esses dois não estão interferindo em nada no código
-   */
-  //pontoAnterior = ponto;
-  //anguloAnterior = angulo;
 }
 
-//Variáveis para avaliar o deslocamento do mouse
 /*
-var xi;
-var yi;
-canvas.addEventListener("mousedown", function (e) {
-  xi = e.offsetX;
-  yi = e.offsetY;
-}, false);
-
-//Evento de movimento do mouse (se há botão pressionado)
-canvas.addEventListener("mousemove", function (e) {
-  if (e.buttons > 0) {
-    camera.position.x = 40 * (xi - e.offsetX) / canvas.width;
-    camera.position.y = 40 * (e.offsetY - yi) / canvas.height;
-    camera.lookAt( cena.position );
-    //https://threejs.org/examples/#misc_lookat
-    //https://github.com/mrdoob/three.js/blob/master/examples/misc_lookat.html
-    //camera.rotation.x += 2 * Math.PI / 180;
-    //camera.rotation.y += 2 * Math.PI / 180;
-
-    //camera.position.x = radianos * Math.cos( anguloCamera );  
-    //camera.position.x = radianos * Math.cos( anguloCamera );  
-    //camera.position.z = radianos * Math.sin( anguloCamera );
-    //anguloCamera += 0.01;
-  }
-}, false);*/
-
 window.addEventListener('resize', onWindowResize, false);
 
 function onWindowResize() {
@@ -233,6 +201,32 @@ canvas.addEventListener("mousemove", function (e) {
     camera.lookAt(cena.position);
     //camera.position.z -=0.01;
   }
+}, false);*/
+
+//Movimentação da Camera
+var xi;
+var yi;
+
+canvas.addEventListener("mousedown", function (e) {
+    xi = e.offsetX;
+    yi = e.offsetY;
+
+}, false);
+
+canvas.addEventListener("mousemove", function (e) {
+
+    if (e.buttons == 1) { //botão esquerdo do mouse
+        camera.position.x = -40 * (xi - e.offsetX) / canvas.width;
+        camera.position.y = -40 * (e.offsetY - yi) / canvas.height;
+    }
+    
+    if(e.buttons == 2 ){ //botão direito do mouse
+        camera.position.y = 20 * Math.sin((e.offsetY - yi)*Math.PI / 180);
+        camera.position.z = 20 * Math.cos((e.offsetY - yi)*Math.PI / 180);
+        camera.lookAt(cena.position);
+        console.log("xi: ",xi, " yi: ",yi);
+    }
+
 }, false);
 
 function desenhar() {
