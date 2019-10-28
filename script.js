@@ -288,6 +288,14 @@ function pegarAngulo(posicao) {
 }
 
 function movimento() {
+
+  var vel = 0.3;
+
+  roda1.rotation.x -= vel;
+  roda2.rotation.x -= vel;
+  roda3.rotation.x -= vel;
+  roda4.rotation.x -= vel;
+
   // Adicionando a posição para o movimento
   posicao += 0.001;
 
