@@ -38,7 +38,7 @@ cena.add(luz);
 
 //Pista
 var planoPista = new THREE.PlaneGeometry(20, 20, 1, 1);
-var pistaMaterial = new THREE.MeshLambertMaterial({
+var pistaMaterial = new THREE.MeshPhongMaterial({
   map: new THREE.TextureLoader().load('pista.png')
 });
 //Unindo o material da pista com o plano
@@ -49,7 +49,63 @@ material.position.set(1, 0, -0.2);
 // Adicionando o a pista a cena
 cena.add(material);
 
-//Spline 
+//sombra
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.BasicShadowMap;
+
+//Luz
+var luz = new THREE.AmbientLight(0xffffff, 0.4);
+// luz.position.setScalar(15);
+cena.add(luz);
+
+//Cria um holofote para projetar a sombra
+var light = new THREE.PointLight(0xffffff, 0.8, 18);
+light.position.set(0, 0, 15);
+light.castShadow = true;
+light.shadow.camera.near = 0.1;
+light.shadow.camera.far = 25;
+cena.add(light);
+
+//Spline nuvem
+var splineCloud = new THREE.SplineCurve([
+  new THREE.Vector3(2, 2, 5),
+  new THREE.Vector3(-2, 3, 5),
+  new THREE.Vector3(-2, -2, 5),
+  new THREE.Vector3(2, -2, 5),
+  new THREE.Vector3(2, 2, 5),
+  //new THREE.Vector3(0.25, 0.2, 1),
+  //new THREE.Vector3(-0.15, 0, 1),
+  //new THREE.Vector3(-0.85, 0.16, 1),
+
+]);
+
+var caminhoNuvem = new THREE.Path(splineCloud.getPoints(300));
+var geometriaLinhaNuvem = caminhoNuvem.createPointsGeometry(300);
+var materialPontoNuvem = new THREE.PointsMaterial({ size: 10, sizeAttenuation: false });
+
+for (let s of splineCloud.points) {
+  var geometriaPontoNuvem = new THREE.Geometry();
+  geometriaPontoNuvem.vertices.push(new THREE.Vector3(s.x, s.y, s.z));
+  var pontoNuvem = new THREE.Points(geometriaPontoNuvem, materialPontoNuvem);
+  cena.add(pontoNuvem);
+}
+
+var materialNuvem = new THREE.LineBasicMaterial({ color: 0xFFFFFF });
+var linhaNuvem = new THREE.Line(geometriaLinhaNuvem, materialNuvem);
+linhaNuvem.position.set(0, 0, 5);
+cena.add(linhaNuvem);
+// ---------------------- Fim do Spline das nuvens
+
+//sol
+var sunGeometry = new THREE.SphereGeometry(1, 50, 50);
+var sunMaterial = new THREE.MeshBasicMaterial({ color: 0xffff00 });
+var sol = new THREE.Mesh(sunGeometry, sunMaterial);
+sol.position.set(0, 0, 15);
+sol.castShadow = false;
+sol.receiveShadow = false;
+cena.add(sol);
+
+//Spline
 //Pontos por onde a curva irá passar
 var curva = new THREE.SplineCurve([
   new THREE.Vector3(-7.2, 3, 0.2),
@@ -95,19 +151,19 @@ cena.add(linha);
 
 //Corpo do carro
 var geometria = new THREE.BoxGeometry(1, 1.5, 0.3);
-var material = new THREE.MeshBasicMaterial({ color: 0xff0000 });
+var material = new THREE.MeshPhongMaterial({ color: 0xff0000 });
 var cubo = new THREE.Mesh(geometria, material);
 cubo.position.z = 0;
 
 //Roda do carro
 var circulo = new THREE.CircleGeometry(0.2, 32);
-var imagemRoda = new THREE.MeshBasicMaterial({
+var imagemRoda = new THREE.MeshPhongMaterial({
   map: new THREE.TextureLoader().load('roda.png'),
   side: THREE.DoubleSide
 });
 
 var geometry = new THREE.PlaneGeometry( 1,0.4, 32 );
-var material = new THREE.MeshBasicMaterial( {color: 0x6bbd1, side: THREE.DoubleSide} );
+var material = new THREE.MeshPhongMaterial( {color: 0x6bbd1, side: THREE.DoubleSide} );
 var vidro1 = new THREE.Mesh( geometry, material );
 vidro1.rotation.x = 1.6;
 vidro1.position.y = 0.3
@@ -120,7 +176,7 @@ vidro2.position.z = 0.2;
 
 
 var geometry = new THREE.PlaneGeometry( 0.2,0.5, 32 );
-var material = new THREE.MeshBasicMaterial( {color: 0x6bbd1, side: THREE.DoubleSide} );
+var material = new THREE.MeshPhongMaterial( {color: 0x6bbd1, side: THREE.DoubleSide} );
 var vidro3 = new THREE.Mesh( geometry, material );
 vidro3.rotation.y = 1.6;
 vidro3.position.x = 0.51;
@@ -132,13 +188,13 @@ vidro4.position.x = -0.51;
 vidro4.position.z = 0.26;
 
 var geometry = new THREE.PlaneGeometry( 1,0.6, 32 );
-var material = new THREE.MeshBasicMaterial( {color: 0xff0000, side: THREE.DoubleSide} );
+var material = new THREE.MeshPhongMaterial( {color: 0xff0000, side: THREE.DoubleSide} );
 var teto = new THREE.Mesh( geometry, material );
 teto.position.z = 0.4;
 
 //Corpo do carro
 var geometria = new THREE.BoxGeometry(1, 0.5, 0.2);
-var material = new THREE.MeshBasicMaterial({ color: 0xff0000 });
+var material = new THREE.MeshPhongMaterial({ color: 0xff0000 });
 var interior = new THREE.Mesh(geometria, material);
 interior.position.z = 0.3;
 
@@ -180,7 +236,7 @@ roda4.position.z = -0.2;
 
 
 var geometry = new THREE.BoxGeometry( 0.15, 0.15, 0.15 );
-var material = new THREE.MeshBasicMaterial( {color: 0xf8cf0d} );
+var material = new THREE.MeshPhongMaterial( {color: 0xf8cf0d} );
 var farol1 = new THREE.Mesh( geometry, material );
 farol1.position.x = 0.4;
 farol1.position.y = -0.7;
