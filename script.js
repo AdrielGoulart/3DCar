@@ -30,12 +30,12 @@ document.body.appendChild(renderer.domElement);
 
 //luz
 var luz = new THREE.SpotLight(0xffffff, 1);
-luz.position.set(5, 0, 13);
+luz.position.set(2, 0, 19);
 luz.castShadow = true;
-luz.target.position.set(-1, 0, 1);
+luz.target.position.set(0, 0, 0);
 luz.shadowDarkness = 0.2;
-luz.shadowCameraNear = 6;
-luz.shadowCameraFar = 13;
+luz.shadowCameraNear = 3;
+luz.shadowCameraFar = 19;
 
 cena.add(luz);
 var helper = new THREE.CameraHelper(luz.shadow.camera);
@@ -95,7 +95,7 @@ cena.add(linhaNuvem);
 var sunGeometry = new THREE.SphereGeometry(1, 50, 50);
 var sunMaterial = new THREE.MeshBasicMaterial({ color: 0xffff00 });
 var sol = new THREE.Mesh(sunGeometry, sunMaterial);
-sol.position.set(5, 0, 13);
+sol.position.set(2, 0, 19);
 sol.castShadow = false;
 sol.receiveShadow = false;
 cena.add(sol);
