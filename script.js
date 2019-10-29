@@ -33,13 +33,10 @@ var luz = new THREE.SpotLight(0xffffff, 1);
 luz.position.set(2, 0, 19);
 luz.castShadow = true;
 luz.target.position.set(0, 0, 0);
-luz.shadowDarkness = 0.2;
-luz.shadowCameraNear = 3;
-luz.shadowCameraFar = 19;
+luz.shadow.camera.near = 3;
+luz.shadow.camera.far = 19;
 
 cena.add(luz);
-var helper = new THREE.CameraHelper(luz.shadow.camera);
-cena.add(helper);
 
 //sombra
 renderer.shadowMap.enabled = true;
@@ -59,37 +56,38 @@ pista.position.set(1, 0, -0.2);
 // Adicionando o a pista a cena
 cena.add(pista);
 
-/*
-//Spline nuvem
-var splineCloud = new THREE.SplineCurve([
-  new THREE.Vector3(2, 2, 5),
-  new THREE.Vector3(-2, 3, 5),
-  new THREE.Vector3(-2, -2, 5),
-  new THREE.Vector3(2, -2, 5),
-  new THREE.Vector3(2, 2, 5),
-  //new THREE.Vector3(0.25, 0.2, 1),
-  //new THREE.Vector3(-0.15, 0, 1),
-  //new THREE.Vector3(-0.85, 0.16, 1),
+//Arquibancada
+var geometry = new THREE.PlaneGeometry(20, 20, 2);
+var torcida = new THREE.MeshPhongMaterial({
+  map: new THREE.TextureLoader().load('torcida.png'),
+  transparent: true
+});
 
-]);
+var arquibancada1 = new THREE.Mesh(geometry, torcida);
+arquibancada1.rotation.z = 17.28;
+arquibancada1.rotation.x = 0.5;
+arquibancada1.position.x = 1;
+arquibancada1.position.z = 2;
+arquibancada1.position.y = 15;
+cena.add(arquibancada1);
 
-var caminhoNuvem = new THREE.Path(splineCloud.getPoints(300));
-var geometriaLinhaNuvem = caminhoNuvem.createPointsGeometry(300);
-var materialPontoNuvem = new THREE.PointsMaterial({ size: 10, sizeAttenuation: false });
+var arquibancada2 = arquibancada1.clone();
+arquibancada2.position.y = 0;
+arquibancada2.position.x = -12;
+arquibancada2.position.z = 4;
+arquibancada2.rotation.x = 0;
+arquibancada2.rotation.y = 1;
+arquibancada2.rotation.z = 0;
+cena.add(arquibancada2);
 
-for (let s of splineCloud.points) {
-  var geometriaPontoNuvem = new THREE.Geometry();
-  geometriaPontoNuvem.vertices.push(new THREE.Vector3(s.x, s.y, s.z));
-  var pontoNuvem = new THREE.Points(geometriaPontoNuvem, materialPontoNuvem);
-  cena.add(pontoNuvem);
-}
-
-var materialNuvem = new THREE.LineBasicMaterial({ color: 0xFFFFFF });
-var linhaNuvem = new THREE.Line(geometriaLinhaNuvem, materialNuvem);
-linhaNuvem.position.set(0, 0, 5);
-cena.add(linhaNuvem);
-// ---------------------- Fim do Spline das nuvens
-*/
+var arquibancada3 = arquibancada1.clone();
+arquibancada3.position.y = 0;
+arquibancada3.position.x = 14;
+arquibancada3.position.z = 4;
+arquibancada3.rotation.x = 0;
+arquibancada3.rotation.y = -1;
+arquibancada3.rotation.z = 3.12;
+cena.add(arquibancada3);
 
 //sol
 var sunGeometry = new THREE.SphereGeometry(1, 50, 50);
@@ -343,6 +341,7 @@ function desenhar() {
   movimento();
 
   requestAnimationFrame(desenhar);
+  //cylinder.material.map.needsUpdate = true;
   renderer.render(cena, camera);
 }
 
