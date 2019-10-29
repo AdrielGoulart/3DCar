@@ -6,9 +6,6 @@ var winY = window.innerHeight / 2;
 var limiteZ = 0;
 var posicao = 0;
 
-var anguloAnterior;
-var pontoAnterior;
-
 //Linha da pista
 var materialLinha = new THREE.LineBasicMaterial({ color: 0xFFFFFF });
 var geometriaLinha = new THREE.Geometry();
@@ -31,10 +28,22 @@ renderer.setClearColor(0x101010);
 var canvas = renderer.domElement;
 document.body.appendChild(renderer.domElement);
 
-//Luz da câmera
-var luz = new THREE.DirectionalLight(0xffffff, 1);
-luz.position.setScalar(10);
+//luz
+var luz = new THREE.SpotLight(0xffffff, 1);
+luz.position.set(5, 0, 13);
+luz.castShadow = true;
+luz.target.position.set(-1, 0, 1);
+luz.shadowDarkness = 0.2;
+luz.shadowCameraNear = 6;
+luz.shadowCameraFar = 13;
+
 cena.add(luz);
+var helper = new THREE.CameraHelper(luz.shadow.camera);
+cena.add(helper);
+
+//sombra
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.BasicShadowMap;
 
 //Pista
 var planoPista = new THREE.PlaneGeometry(20, 20, 1, 1);
@@ -42,30 +51,15 @@ var pistaMaterial = new THREE.MeshPhongMaterial({
   map: new THREE.TextureLoader().load('pista.png')
 });
 //Unindo o material da pista com o plano
-var material = new THREE.Mesh(planoPista, pistaMaterial);
-material.receiveShadow = true;
-material.position.set(1, 0, -0.2);
+var pista = new THREE.Mesh(planoPista, pistaMaterial);
+pista.receiveShadow = true;
+pista.castShadow = true;
+pista.position.set(1, 0, -0.2);
 
 // Adicionando o a pista a cena
-cena.add(material);
+cena.add(pista);
 
-//sombra
-renderer.shadowMap.enabled = true;
-renderer.shadowMap.type = THREE.BasicShadowMap;
-
-//Luz
-var luz = new THREE.AmbientLight(0xffffff, 0.4);
-// luz.position.setScalar(15);
-cena.add(luz);
-
-//Cria um holofote para projetar a sombra
-var light = new THREE.PointLight(0xffffff, 0.8, 18);
-light.position.set(0, 0, 15);
-light.castShadow = true;
-light.shadow.camera.near = 0.1;
-light.shadow.camera.far = 25;
-cena.add(light);
-
+/*
 //Spline nuvem
 var splineCloud = new THREE.SplineCurve([
   new THREE.Vector3(2, 2, 5),
@@ -95,12 +89,13 @@ var linhaNuvem = new THREE.Line(geometriaLinhaNuvem, materialNuvem);
 linhaNuvem.position.set(0, 0, 5);
 cena.add(linhaNuvem);
 // ---------------------- Fim do Spline das nuvens
+*/
 
 //sol
 var sunGeometry = new THREE.SphereGeometry(1, 50, 50);
 var sunMaterial = new THREE.MeshBasicMaterial({ color: 0xffff00 });
 var sol = new THREE.Mesh(sunGeometry, sunMaterial);
-sol.position.set(0, 0, 15);
+sol.position.set(5, 0, 13);
 sol.castShadow = false;
 sol.receiveShadow = false;
 cena.add(sol);
@@ -137,7 +132,7 @@ var geometriaLinha = caminho.createPointsGeometry(250);
 //Desenhar os pontos de referencia 
 var materialPonto = new THREE.PointsMaterial({ size: 10, sizeAttenuation: false });
 
-//For responsáve por adicionar os pontos na tela
+//For responsável por adicionar os pontos na tela
 for (let p of curva.points) {
   var geometriaPonto = new THREE.Geometry();
   geometriaPonto.vertices.push(new THREE.Vector3(p.x, p.y, p.z));
@@ -152,19 +147,15 @@ cena.add(linha);
 //Corpo do carro
 var geometria = new THREE.BoxGeometry(1, 1.5, 0.3);
 var material = new THREE.MeshPhongMaterial({ color: 0xff0000 });
-var cubo = new THREE.Mesh(geometria, material);
-cubo.position.z = 0;
+var corpoCarro = new THREE.Mesh(geometria, material);
+corpoCarro.position.z = 0;
+corpoCarro.receiveShadow = true;
 
-//Roda do carro
-var circulo = new THREE.CircleGeometry(0.2, 32);
-var imagemRoda = new THREE.MeshPhongMaterial({
-  map: new THREE.TextureLoader().load('roda.png'),
-  side: THREE.DoubleSide
-});
-
-var geometry = new THREE.PlaneGeometry( 1,0.4, 32 );
-var material = new THREE.MeshPhongMaterial( {color: 0x6bbd1, side: THREE.DoubleSide} );
-var vidro1 = new THREE.Mesh( geometry, material );
+//Vidro frente e trás do carro
+var geometry = new THREE.PlaneGeometry(1, 0.4, 32);
+var material = new THREE.MeshPhongMaterial({ color: 0x6bbd1, side: THREE.DoubleSide });
+var vidro1 = new THREE.Mesh(geometry, material);
+vidro1.receiveShadow = true;
 vidro1.rotation.x = 1.6;
 vidro1.position.y = 0.3
 vidro1.position.z = 0.2;
@@ -174,10 +165,10 @@ vidro2.rotation.x = 1.6;
 vidro2.position.y = -0.3
 vidro2.position.z = 0.2;
 
-
-var geometry = new THREE.PlaneGeometry( 0.2,0.5, 32 );
-var material = new THREE.MeshPhongMaterial( {color: 0x6bbd1, side: THREE.DoubleSide} );
-var vidro3 = new THREE.Mesh( geometry, material );
+//Vidro lateral do carro
+var geometry = new THREE.PlaneGeometry(0.2, 0.5, 32);
+var material = new THREE.MeshPhongMaterial({ color: 0x6bbd1, side: THREE.DoubleSide });
+var vidro3 = new THREE.Mesh(geometry, material);
 vidro3.rotation.y = 1.6;
 vidro3.position.x = 0.51;
 vidro3.position.z = 0.26;
@@ -187,21 +178,30 @@ vidro4.rotation.y = 1.6;
 vidro4.position.x = -0.51;
 vidro4.position.z = 0.26;
 
-var geometry = new THREE.PlaneGeometry( 1,0.6, 32 );
-var material = new THREE.MeshPhongMaterial( {color: 0xff0000, side: THREE.DoubleSide} );
-var teto = new THREE.Mesh( geometry, material );
+//Teto do Carro
+var geometry = new THREE.PlaneGeometry(1, 0.6, 32);
+var material = new THREE.MeshPhongMaterial({ color: 0xff0000, side: THREE.DoubleSide });
+var teto = new THREE.Mesh(geometry, material);
 teto.position.z = 0.4;
+teto.receiveShadow = true;
 
-//Corpo do carro
+//Interior do carro
 var geometria = new THREE.BoxGeometry(1, 0.5, 0.2);
 var material = new THREE.MeshPhongMaterial({ color: 0xff0000 });
 var interior = new THREE.Mesh(geometria, material);
 interior.position.z = 0.3;
+interior.receiveShadow = true;
 
-
+//Roda do carro
+var circulo = new THREE.CircleGeometry(0.2, 32);
+var imagemRoda = new THREE.MeshPhongMaterial({
+  map: new THREE.TextureLoader().load('roda.png'),
+  side: THREE.DoubleSide
+});
 
 //Roda 1
 var roda1 = new THREE.Mesh(circulo, imagemRoda);
+roda1.receiveShadow = true;
 roda1.rotation.x = 1.57;
 roda1.rotation.y = 1.57;
 roda1.position.x = 0.6;
@@ -216,7 +216,6 @@ roda2.position.x = -0.6;
 roda2.position.y = -0.4;
 roda2.position.z = -0.2;
 
-
 //Roda 3
 var roda3 = roda1.clone();
 roda3.rotation.x = 1.57;
@@ -224,7 +223,6 @@ roda3.rotation.y = 1.57;
 roda3.position.x = 0.6;
 roda3.position.y = 0.4;
 roda3.position.z = -0.2;
-
 
 //Roda 4
 var roda4 = roda1.clone();
@@ -234,32 +232,36 @@ roda4.position.x = -0.6;
 roda4.position.y = 0.4;
 roda4.position.z = -0.2;
 
-
-var geometry = new THREE.BoxGeometry( 0.15, 0.15, 0.15 );
-var material = new THREE.MeshPhongMaterial( {color: 0xf8cf0d} );
-var farol1 = new THREE.Mesh( geometry, material );
+//Farol 1
+var geometry = new THREE.BoxGeometry(0.15, 0.15, 0.15);
+var material = new THREE.MeshPhongMaterial({ color: 0xf8cf0d });
+var farol1 = new THREE.Mesh(geometry, material);
+farol1.receiveShadow = true;
 farol1.position.x = 0.4;
 farol1.position.y = -0.7;
 farol1.position.z = 0.1;
 
+//Farol 2
 var farol2 = farol1.clone();
 farol2.position.x = -0.4;
 farol2.position.y = -0.7;
 farol2.position.z = 0.1;
 
+//Farol 3
 var farol3 = farol1.clone();
 farol3.position.x = -0.4;
 farol3.position.y = 0.7;
 farol3.position.z = 0.1;
 
+//Farol 4
 var farol4 = farol1.clone();
 farol4.position.x = 0.4;
 farol4.position.y = 0.7;
 farol4.position.z = 0.1;
 
-
+//Carro
 var carro = new THREE.Group();
-carro.add(cubo);
+carro.add(corpoCarro);
 carro.add(roda1);
 carro.add(roda2);
 carro.add(roda3);
@@ -312,56 +314,34 @@ function movimento() {
   carro.quaternion.setFromAxisAngle(new THREE.Vector3(0, 0, 1), angulo);
 }
 
-/*
-window.addEventListener('resize', onWindowResize, false);
-
-function onWindowResize() {
-  winX = window.innerWidth / 2;
-  winY = window.innerHeight / 2;
-  camera.aspect = window.innerWidth / window.innerHeight;
-  camera.updateProjectionMatrix();
-  renderer.setSize(window.innerWidth, window.innerHeight);
-}
-
-canvas.addEventListener("mousemove", function (e) {
-  if (e.buttons > 0) {
-    mouseX = (event.clientX - winX);
-    mouseY = (event.clientY - winY);
-    camera.position.x += (mouseX - camera.position.x) * 0.001;
-    camera.position.y += (mouseY - camera.position.y) * 0.001;
-    camera.lookAt(cena.position);
-    //camera.position.z -=0.01;
-  }
-}, false);*/
-
 //Movimentação da Camera
 var xi;
 var yi;
 
 canvas.addEventListener("mousedown", function (e) {
-    xi = e.offsetX;
-    yi = e.offsetY;
+  xi = e.offsetX;
+  yi = e.offsetY;
 
 }, false);
 
 canvas.addEventListener("mousemove", function (e) {
 
-    if (e.buttons == 1) { //botão esquerdo do mouse
-        camera.position.x = -40 * (xi - e.offsetX) / canvas.width;
-        camera.position.y = -40 * (e.offsetY - yi) / canvas.height;
-    }
-    
-    if(e.buttons == 2 ){ //botão direito do mouse
-        camera.position.y = 20 * Math.sin((e.offsetY - yi)*Math.PI / 180);
-        camera.position.z = 20 * Math.cos((e.offsetY - yi)*Math.PI / 180);
-        camera.lookAt(cena.position);
-    }
+  if (e.buttons == 1) { //botão esquerdo do mouse
+    camera.position.x = -40 * (xi - e.offsetX) / canvas.width;
+    camera.position.y = -40 * (e.offsetY - yi) / canvas.height;
+  }
+
+  if (e.buttons == 2) { //botão direito do mouse
+    camera.position.y = 20 * Math.sin((e.offsetY - yi) * Math.PI / 180);
+    camera.position.z = 20 * Math.cos((e.offsetY - yi) * Math.PI / 180);
+    camera.lookAt(cena.position);
+  }
 
 }, false);
 
 function desenhar() {
   movimento();
-  
+
   requestAnimationFrame(desenhar);
   renderer.render(cena, camera);
 }
