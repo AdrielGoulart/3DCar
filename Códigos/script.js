@@ -56,7 +56,8 @@ pista.position.set(1, 0, -0.2);
 // Adicionando o a pista a cena
 cena.add(pista);
 
-
+// Base dos Telões
+//Base 1
 var geometry = new THREE.CylinderGeometry(0.2, 0.2, 3.3, 32);
 var material = new THREE.MeshBasicMaterial({ color: 0xffff00 });
 var baseTelao = new THREE.Mesh(geometry, material);
@@ -66,6 +67,14 @@ baseTelao.position.x = -9;
 baseTelao.position.z = 0;
 cena.add(baseTelao);
 
+//Base 2
+var baseTelao2 = baseTelao.clone();
+baseTelao2.rotation.x = 1.4;
+baseTelao2.position.y = 10;
+baseTelao2.position.x = 10.9;
+baseTelao2.position.z = 0;
+cena.add(baseTelao2);
+
 //Telão
 var material = new THREE.PlaneGeometry(2.8, 2.5, 1);
 var animacao = new THREE.MeshPhongMaterial({
@@ -74,7 +83,6 @@ var animacao = new THREE.MeshPhongMaterial({
 });
 
 var tela = new THREE.Mesh(material, animacao);
-
 tela.rotation.x = 1.5;
 tela.rotation.y = 0.8;
 tela.position.x = -9;
@@ -82,6 +90,14 @@ tela.position.y = 10.3;
 tela.position.z = 2.8;
 cena.add(tela);
 
+// Telão 2/
+var tela2 = tela.clone();
+tela.rotation.x = 1.4;
+tela.rotation.y = -0.8;
+tela.position.x = 10.9;
+tela.position.y = 10.4;
+tela.position.z = 2.8;
+cena.add(tela2);
 
 //Arquibancada
 var geometry = new THREE.PlaneGeometry(20, 20, 2);
@@ -377,6 +393,7 @@ function desenhar() {
   movimento();
   requestAnimationFrame(desenhar);
   tela.material.map.needsUpdate = true;
+  tela2.material.map.needsUpdate = true;
   renderer.render(cena, camera);
 }
 
