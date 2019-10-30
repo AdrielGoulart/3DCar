@@ -151,7 +151,10 @@ corpoCarro.receiveShadow = true;
 
 //Vidro frente e trás do carro
 var geometry = new THREE.PlaneGeometry(1, 0.4, 32);
-var material = new THREE.MeshPhongMaterial({ color: 0x6bbd1, side: THREE.DoubleSide });
+var material = new THREE.MeshPhongMaterial({
+  color: 0x6bbd1,
+  side: THREE.DoubleSide 
+});
 var vidro1 = new THREE.Mesh(geometry, material);
 vidro1.receiveShadow = true;
 vidro1.rotation.x = 1.6;
@@ -165,7 +168,10 @@ vidro2.position.z = 0.2;
 
 //Vidro lateral do carro
 var geometry = new THREE.PlaneGeometry(0.2, 0.5, 32);
-var material = new THREE.MeshPhongMaterial({ color: 0x6bbd1, side: THREE.DoubleSide });
+var material = new THREE.MeshPhongMaterial({
+  color: 0x6bbd1,
+  side: THREE.DoubleSide 
+});
 var vidro3 = new THREE.Mesh(geometry, material);
 vidro3.rotation.y = 1.6;
 vidro3.position.x = 0.51;
@@ -178,7 +184,10 @@ vidro4.position.z = 0.26;
 
 //Teto do Carro
 var geometry = new THREE.PlaneGeometry(1, 0.6, 32);
-var material = new THREE.MeshPhongMaterial({ color: 0xff0000, side: THREE.DoubleSide });
+var material = new THREE.MeshPhongMaterial({
+  color: 0xff0000,
+  side: THREE.DoubleSide 
+});
 var teto = new THREE.Mesh(geometry, material);
 teto.position.z = 0.4;
 teto.receiveShadow = true;
@@ -209,7 +218,7 @@ roda1.position.z = -0.2;
 //Roda 2
 var roda2 = roda1.clone();
 roda2.rotation.x = 1.57;
-roda2.rotation.y = 1.57;
+roda2.rotation.y = -1.57;
 roda2.position.x = -0.6;
 roda2.position.y = -0.4;
 roda2.position.z = -0.2;
@@ -225,7 +234,7 @@ roda3.position.z = -0.2;
 //Roda 4
 var roda4 = roda1.clone();
 roda4.rotation.x = 1.57;
-roda4.rotation.y = 1.57;
+roda4.rotation.y = -1.57;
 roda4.position.x = -0.6;
 roda4.position.y = 0.4;
 roda4.position.z = -0.2;
